@@ -1,3 +1,6 @@
+// for your adjustment; xy tolerance
+tolerance = 0.25;
+
 cap_w = 19;
 switch_w = 14;
 switch_t = 1.4; // thickness of the "plate" that the switches clip into
@@ -48,12 +51,12 @@ difference() {
   for (pos = switch_positions) {
     // the hole for the switch
     translate([pos[0] * cap_w, pos[1] * cap_w, 0]) {
-      cube(switch_w, center = true);
+      cube(switch_w + tolerance * 2, center = true);
     }
 
     // the thin spots in the switch plate
     translate([pos[0] * cap_w, pos[1] * cap_w, 0]) {
-      cube([5, switch_w + 2, kb_h - switch_t * 2], center = true);
+      cube([5 + tolerance * 2, switch_w + 2 + tolerance * 2, kb_h - switch_t * 2], center = true);
     }
   }
 
