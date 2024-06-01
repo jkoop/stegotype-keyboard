@@ -1,7 +1,6 @@
 /**
  * Written for and tested on a esp32doit-devkit-v1 with platformIO.
  * @todo report actual battery level instead of hardcoding 100%
- * @todo report more than one keypress at a time instead of just one
  */
 
 /**
@@ -243,20 +242,16 @@ void sendUpdatesIfNeeded() {
         .pressedKeys = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     };
 
+    uint_fast8_t pressedKeysIndex = 0;
     for (int8_t col = 0; col < 5; col++) {
         for (int8_t row = 0; row < 5; row++) {
             if (keyStates[row][col]) {
                 if (KEY_MAP[row][col] != 0)
-                report.pressedKeys[0] = keymap[KEY_MAP[row][col]].usage;
-                // report.pressedKeys[row * 5 + col] = keymap[KEY_MAP[row][col]].usage;
-                Serial.print(KEY_MAP[row][col]);
-            // } else {
-            //     report.pressedKeys[row * 5 + col] = 0;
+                report.pressedKeys[pressedKeysIndex] = keymap[KEY_MAP[row][col]].usage;
+                pressedKeysIndex++;
             }
         }
     }
-
-    Serial.print("\n");
 
     // send the input report
     input->setValue((uint8_t*) &report, sizeof(report));
