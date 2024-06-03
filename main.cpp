@@ -19,9 +19,9 @@
 // Change the below values if desired
 #define DEVICE_NAME "ESP32 Keyboard"
 #define DEVICE_MANUFACTURER "FOSS Community"
-#define STATUS_LED 18
-const uint8_t MATRIX_ROWS[] = {25, 33, 32, 35, 34};
-const uint8_t MATRIX_COLS[] = {13, 12, 14, 27, 26};
+#define STATUS_LED 15
+const uint8_t MATRIX_ROWS[] = {18, 19, 21, 22, 23};
+const uint8_t MATRIX_COLS[] = {14, 27, 26, 25, 33};
 
 // [row][col]
 const char KEY_MAP[5][5] = {
@@ -205,6 +205,7 @@ void updateKeyData() {
     memcpy(&keyStatesPrev, &keyStates, sizeof(keyStates));
 
     for (int8_t col = 0; col < 5; col++) {
+        pinMode(MATRIX_COLS[col], OUTPUT);
         digitalWrite(MATRIX_COLS[col], 1);
 
         for (int8_t row = 0; row < 5; row++) {
@@ -227,7 +228,7 @@ void updateKeyData() {
             }
         }
 
-        digitalWrite(MATRIX_COLS[col], 0);
+        pinMode(MATRIX_COLS[col], INPUT);
     }
 }
 
@@ -239,7 +240,7 @@ void sendUpdatesIfNeeded() {
     InputReport report = {
         .modifiers = 0,
         .reserved = 0,
-        .pressedKeys = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        .pressedKeys = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
     uint_fast8_t pressedKeysIndex = 0;
@@ -271,7 +272,6 @@ void setup() {
     pinMode(STATUS_LED, OUTPUT);
     for (int8_t i = 0; i < 5; i++) {
         pinMode(MATRIX_ROWS[i], INPUT_PULLDOWN);
-        pinMode(MATRIX_COLS[i], OUTPUT);
     }
 
     // start Bluetooth task
